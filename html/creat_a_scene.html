@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>three.js创建一个场景</title>
+	<script type="text/javascript" src="../js/three.js"></script>
+</head>
+<body>
+
+</body>
+<script>
+	var scene = new THREE.Scene();
+	var camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setSize(window.innerWidth,window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+	//上面的代码构建了scene,camera和renderer。three.js的构架支持多钟camera，这里使用的最常见的远景相机（PerspectiveCamera）,也就是类似与人眼观察的方式。第一个属性75设置的是视角（field of view）. 第二个属性设置的是相机拍摄面的长宽比（aspect ratio）,会使用元素的宽除以高，否则会出现挤压变形。接下来的2个属性是近裁剪面（near clipping plane）和远裁剪面（far clipping plane）
+	var geometry = new THREE.BoxGeometry(1,1,1);
+	var material = new THREE.MeshBasicMaterial({ color:0x00ff00});
+	var cube = new THREE.Mesh(geometry,material);
+	scene.add(cube);
+	camera.position.z =5;
+	//创建一个立方体，需要使用盒子模型（BoxGeometry）,这是一个包含立方体所有顶点和填充面的对象。material对其着色。three.js支持多钟材料，现在只使用网孔基础材料（MeshBasicMaterial）。所有材料都含有一个属性对象。网孔（mesh）用来承载几何模型的一个对象，还可以把材料应用到它上面，然后添加到场景中完成旋转动画。默认情况下，当我们调用scene.add(),对象将被添加到原点处，即坐标点（0,0,0），这将导致相机和立方体发生空间重叠。为了避免这样，我们把相机（camera）的位置移出来一些。
+
+	//渲染场景,需要一个渲染循环（render loop）
+	function render(){
+		requestAnimationFrame(render);
+		cube.rotation.x += 0.1;
+		cube.rotation.y += 0.1;
+		renderer.render(scene,camera);
+	}
+	render();
+	//requestAnimationFrame代替setInterval,这个新接口具体多个优点，比如浏览器tab切换后停止渲染以节约资源，和屏幕刷新同步避免无效刷新，在不支持该接口的浏览器中能安全回退为setInterval.
+
+	//创建动画
+	//cube.rotation.x += 0.1;
+	//cube.rotation.y += 0.1;
+</script>
+</html>
